@@ -201,6 +201,8 @@ func placeStandardTrade(s string, request RpcRequest) (data interface{}) {
 func cancelOrder(orderId string) (data interface{}){
     var err error
 
+    var fm *fixc.FixMessage
+
     msg := new(fixc.MsgBase)
     msg.AddField(35, "F")
     msg.AddField(37, orderId)
