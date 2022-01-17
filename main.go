@@ -95,12 +95,12 @@ func onError(err error) {
     return 
 }
 
-func TapiCall(method string, params map[string]string) (js *Json){
+func tapiCall(method string, params map[string]string) (js json){
     if method == "/sendOrder"{
         fmt.Println("HERE:", params)
         return
     }
-
+    return
 }
 
 func SendTrade(s string, request RpcRequest) (data interface{}) {
