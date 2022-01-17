@@ -121,7 +121,6 @@ func placeCustomTrade(contract string, tradeSide string, label string, amount fl
     } else {
         tradeSide = "2"
     }
-    ts := time.Now().UnixNano() / 1e6
 
     msg := new(fixc.MsgBase)
     msg.AddField(35, msgType) // Standard Never Changes
