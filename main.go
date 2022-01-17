@@ -87,7 +87,7 @@ func onConnect() {
 }
 
 func onMessage(fm *fixc.FixMessage) {
-    fmt.Println("receive:", fm.String())
+    fmt.Println("Receive:", fm.String())
 }
 
 func onError(err error) {
@@ -199,6 +199,7 @@ func placeStandardTrade(s string, request RpcRequest) (data interface{}) {
 }
 
 func cancelOrder(orderId string) (data interface{}){
+    fmt.Println("CANCEL ORDER:", orderId)
     var err error
 
     var fm *fixc.FixMessage
