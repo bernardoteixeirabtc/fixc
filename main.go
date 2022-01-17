@@ -198,7 +198,7 @@ func OnPost(w http.ResponseWriter, r *http.Request) {
         }
         data = true
     case "order":
-        orderId := request.Params["id"]
+        //orderId := request.Params["id"]
         data = true
 
     default:
