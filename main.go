@@ -271,7 +271,7 @@ func OnPost(w http.ResponseWriter, r *http.Request) {
         data = placeStandardTrade(symbol, request)
     case "cancel":        
         orderId := request.Params["id"]
-        data = cancelOrder(symbol)
+        data = cancelOrder(orderId)
         data = true
     case "order":
         //orderId := request.Params["id"]
