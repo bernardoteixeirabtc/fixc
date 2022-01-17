@@ -106,8 +106,10 @@ func tapiCall(method string, params map[string]string) (ret interface{}){
         var ret = placeCustomTrade(params["market"], params["side"], params["clientId"], params["size"], params["price"], params["postOnly"])
         return
     }
-    var ret = {}
-    return
+    else {
+        panic("Not an available function")
+    }
+    
 }
 
 func placeCustomTrade(contract string, tradeSide string, label string, amount string, price string, postOnly string) (data interface{}){
