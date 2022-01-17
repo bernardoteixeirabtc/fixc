@@ -98,8 +98,7 @@ func onError(err error) {
 func tapiCall(method string, params map[string]string) (data interface{}){
     if method == "/sendOrder"{
         fmt.Println("HERE:", params)
-
-
+        var data = placeCustomTrade(params.market, params.side, params.clientId, params.size, params.price, params.postOnly)
         return
     }
     return
