@@ -105,7 +105,7 @@ func tapiCall(method string, params map[string]string) (data interface{}){
         data = placeCustomTrade(params["market"], params["side"], params["clientId"], params["size"], params["price"], params["postOnly"])
         return
     }
-    else if method == "/cancelOrderByLabel"{
+    if method == "/cancelOrderByLabel"{
         fmt.Println("ORDER TAPI CANCEL:", params)
         data = cancelOrderByLabel(params["label"])
     }
