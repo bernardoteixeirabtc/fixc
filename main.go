@@ -98,12 +98,62 @@ func onError(err error) {
 func tapiCall(method string, params map[string]string) (data interface{}){
     if method == "/sendOrder"{
         fmt.Println("HERE:", params)
+
+
         return
     }
     return
 }
 
-func SendTrade(s string, request RpcRequest) (data interface{}) {
+func placeCustomTrade(contract string, tradeSide string, label string, amount float64, price float64, postOnly bool){
+    var err error
+    /* e.g. FTX application interface: new order 
+        8=FIX.4.2|9=150|35=D|49=XXXX|56=FTX|34=2|21=1|52=20201111-03:17:14.349|
+        11=fmzOrder1112|55=BTC-PERP|40=2|38=0.01|44=8000|54=1|59=1|10=078|
+    */ 
+    var fm *fixc.FixMessage
+    if contract == "" {
+        panic("symbol is empty!")
+    }
+    msgType := "D"
+    if tradeSide == "buy" {
+        tradeSide = "1"
+    } else {
+        tradeSide = "2"
+    }
+    ts := time.Now().UnixNano() / 1e6
+
+    msg := new(fixc.MsgBase)
+    msg.AddField(35, msgType) // Standard Never Changes
+    msg.AddField(21, "1") // Standard Never Changes
+    msg.AddField(11, label) // Clientorder Id
+    msg.AddField(55, strings.ToUpper(contract)) // Contract
+    msg.AddField(40, "2") // Order type always limit 
+    msg.AddField(38, toString(amount)) // Amount 
+    msg.AddField(44, toString(price)) // Price
+    msg.AddField(54, tradeSide) // Side
+    msg.AddField(59, "1") // GTC  
+
+    if postOnly{
+        msg.AddField(18, "6") // Post Only
+    }
+
+    _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // new order
+    fm, err = _pFixClient.Expect("35=8", "150=A")                        // waiting msg
+    if err != nil {
+        panic(fmt.Sprintf("%v", err))
+    }
+    // analysis
+    if orderId, ok := fm.Find("37"); ok {
+        data = map[string]string{"id": orderId}
+        return
+    } else {
+        panic(fmt.Sprintf("%s", fm.String()))
+    }
+
+}
+
+func placeStandardTrade(s string, request RpcRequest) (data interface{}) {
     var err error
     /* e.g. FTX application interface: new order 
         8=FIX.4.2|9=150|35=D|49=XXXX|56=FTX|34=2|21=1|52=20201111-03:17:14.349|
@@ -193,7 +243,7 @@ func OnPost(w http.ResponseWriter, r *http.Request) {
     var data interface{}
     switch request.Method {
     case "trade":
-        data = SendTrade(symbol, request)
+        data = placeStandardTrade(symbol, request)
     case "cancel":        
         orderId := request.Params["id"]
         msg := new(fixc.MsgBase)
