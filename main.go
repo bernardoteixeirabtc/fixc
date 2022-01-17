@@ -95,20 +95,18 @@ func onError(err error) {
     return 
 }
 
-func tapiCall(method string, params map[string]string) (ret interface{}){
+func tapiCall(method string, params map[string]string) (data interface{}){
     var err error
     if params == nil {
         params = map[string]string{}
     }
 
-    if method == "/sendOrder"{
+    if method == "/sendOrder" {
         fmt.Println("HERE:", params)
-        var ret = placeCustomTrade(params["market"], params["side"], params["clientId"], params["size"], params["price"], params["postOnly"])
+        data = placeCustomTrade(params["market"], params["side"], params["clientId"], params["size"], params["price"], params["postOnly"])
         return
     }
-    else {
-        panic("Not an available function")
-    }
+    return
     
 }
 
