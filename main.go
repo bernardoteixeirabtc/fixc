@@ -210,7 +210,7 @@ func cancelOrder(orderId string) (data interface{}){
     if err != nil {
         panic(fmt.Sprintf("%v", err))
     }
-    return _
+    return true
 }
 
 func OnPost(w http.ResponseWriter, r *http.Request) {
