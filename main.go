@@ -95,7 +95,7 @@ func onError(err error) {
     return 
 }
 
-func SendTrade(symbol, request){
+func SendTrade(symbol symbol, request request){
     /* e.g. FTX application interface: new order 
         8=FIX.4.2|9=150|35=D|49=XXXX|56=FTX|34=2|21=1|52=20201111-03:17:14.349|
         11=fmzOrder1112|55=BTC-PERP|40=2|38=0.01|44=8000|54=1|59=1|10=078|
