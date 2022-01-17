@@ -95,7 +95,7 @@ func onError(err error) {
     return 
 }
 
-func tapiCall(method string, params map[string]string) (js *json){
+func tapiCall(method string, params map[string]string) (data interface{}){
     if method == "/sendOrder"{
         fmt.Println("HERE:", params)
         return
