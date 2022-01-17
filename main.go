@@ -202,23 +202,15 @@ func cancelOrder(orderId string) (data interface{}){
     fmt.Println("CANCEL ORDER:", orderId)
     var err error
 
-    var fm *fixc.FixMessage
-
     msg := new(fixc.MsgBase)
     msg.AddField(35, "F")
     msg.AddField(37, orderId)
     _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // cancel order 
-    fm, err = _pFixClient.Expect("35=8", "150=6")
+    _, err = _pFixClient.Expect("35=8", "150=6")
     if err != nil {
         panic(fmt.Sprintf("%v", err))
     }
-    // analysis
-    if orderId, ok := fm.Find("37"); ok {
-        data = map[string]string{"id": orderId}
-        return
-    } else {
-        panic(fmt.Sprintf("%s", fm.String()))
-    }
+    return _
 }
 
 func OnPost(w http.ResponseWriter, r *http.Request) {
