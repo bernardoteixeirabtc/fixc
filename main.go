@@ -142,7 +142,7 @@ func placeCustomTrade(contract string, tradeSide string, label string, amount st
     }
 
     _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // new order
-    fm, err = _pFixClient.Expect("35=8", "150=A")                        // waiting msg
+    fm, err = _pFixClient.Expect("35=8", "150=A", "11="+ label)                        // waiting msg
     if err != nil {
         panic(fmt.Sprintf("%v", err))
     }
