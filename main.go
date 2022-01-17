@@ -95,7 +95,7 @@ func onError(err error) {
     return 
 }
 
-func SendTrade(s string, request RpcRequest) (orderId interface{}) {
+func SendTrade(s string, request RpcRequest) (data interface{}) {
     var err error
     /* e.g. FTX application interface: new order 
         8=FIX.4.2|9=150|35=D|49=XXXX|56=FTX|34=2|21=1|52=20201111-03:17:14.349|
@@ -130,7 +130,7 @@ func SendTrade(s string, request RpcRequest) (orderId interface{}) {
     }
     // analysis
     if orderId, ok := fm.Find("37"); ok {
-        orderId = map[string]string{"id": orderId}
+        data = map[string]string{"id": orderId}
         return
     } else {
         panic(fmt.Sprintf("%s", fm.String()))
