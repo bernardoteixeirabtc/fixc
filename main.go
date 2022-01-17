@@ -96,7 +96,6 @@ func onError(err error) {
 }
 
 func tapiCall(method string, params map[string]string) (data interface{}){
-    var err error
     if params == nil {
         params = map[string]string{}
     }
