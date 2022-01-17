@@ -205,7 +205,7 @@ func cancelOrder(orderId string) (data interface{}){
     msg.AddField(35, "F")
     msg.AddField(37, orderId)
     _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // cancel order 
-    _, err = _pFixClient.Expect("35=8", "150=6")
+    fm, err = _pFixClient.Expect("35=8", "150=6")
     if err != nil {
         panic(fmt.Sprintf("%v", err))
     }
