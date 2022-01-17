@@ -95,6 +95,47 @@ func onError(err error) {
     return 
 }
 
+func SendTrade(symbol, request){
+    /* e.g. FTX application interface: new order 
+        8=FIX.4.2|9=150|35=D|49=XXXX|56=FTX|34=2|21=1|52=20201111-03:17:14.349|
+        11=fmzOrder1112|55=BTC-PERP|40=2|38=0.01|44=8000|54=1|59=1|10=078|
+    */ 
+    var fm *fixc.FixMessage
+    if symbol == "" {
+        panic("symbol is empty!")
+    }
+    msgType := "D"   
+    tradeSids := request.Params["type"]
+    if tradeSids == "buy" {
+        tradeSids = "1"
+    } else {
+        tradeSids = "2"
+    }
+    ts := time.Now().UnixNano() / 1e6                                          
+    msg := new(fixc.MsgBase)
+    msg.AddField(35, msgType)
+    msg.AddField(21, "1")
+    msg.AddField(11, fmt.Sprintf("fmz%d", ts))
+    msg.AddField(55, strings.ToUpper(symbol))
+    msg.AddField(40, "2")
+    msg.AddField(38, toString(request.Params["amount"]))
+    msg.AddField(44, toString(request.Params["price"]))
+    msg.AddField(54, tradeSids)
+    msg.AddField(59, "1")
+    _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // new order
+    fm, err = _pFixClient.Expect("35=8", "150=A")                        // waiting msg
+    if err != nil {
+        panic(fmt.Sprintf("%v", err))
+    }
+    // analysis
+    if orderId, ok := fm.Find("37"); ok {
+        data = map[string]string{"id": orderId}
+        return data
+    } else {
+        panic(fmt.Sprintf("%s", fm.String()))
+    }
+}
+
 func OnPost(w http.ResponseWriter, r *http.Request) {
     var ret interface{}
     defer func() {
@@ -143,43 +184,7 @@ func OnPost(w http.ResponseWriter, r *http.Request) {
     var data interface{}
     switch request.Method {
     case "trade":
-        /* e.g. FTX application interface: new order 
-            8=FIX.4.2|9=150|35=D|49=XXXX|56=FTX|34=2|21=1|52=20201111-03:17:14.349|
-            11=fmzOrder1112|55=BTC-PERP|40=2|38=0.01|44=8000|54=1|59=1|10=078|
-        */ 
-        var fm *fixc.FixMessage
-        if symbol == "" {
-            panic("symbol is empty!")
-        }
-        msgType := "D"   
-        tradeSids := request.Params["type"]
-        if tradeSids == "buy" {
-            tradeSids = "1"
-        } else {
-            tradeSids = "2"
-        }
-        ts := time.Now().UnixNano() / 1e6                                          
-        msg := new(fixc.MsgBase)
-        msg.AddField(35, msgType)
-        msg.AddField(21, "1")
-        msg.AddField(11, fmt.Sprintf("fmz%d", ts))
-        msg.AddField(55, strings.ToUpper(symbol))
-        msg.AddField(40, "2")
-        msg.AddField(38, toString(request.Params["amount"]))
-        msg.AddField(44, toString(request.Params["price"]))
-        msg.AddField(54, tradeSids)
-        msg.AddField(59, "1")
-        _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // new order
-        fm, err = _pFixClient.Expect("35=8", "150=A")                        // waiting msg
-        if err != nil {
-            panic(fmt.Sprintf("%v", err))
-        }
-        // analysis
-        if orderId, ok := fm.Find("37"); ok {
-            data = map[string]string{"id": orderId}
-        } else {
-            panic(fmt.Sprintf("%s", fm.String()))
-        }
+        data = SendTrade(symbol, request)
     case "cancel":        
         orderId := request.Params["id"]
         msg := new(fixc.MsgBase)
@@ -191,8 +196,16 @@ func OnPost(w http.ResponseWriter, r *http.Request) {
             panic(fmt.Sprintf("%v", err))
         }
         data = true
+    case "order":
+        orderId := request.Params["id"]
+        data = true
+
     default:
-        panic("FTX FIX protocol not support!")
+        if strings.HasPrefix(request.Method, "__api_") {
+            //data, err = e.tapiCall(request.Method[6:], request.Params)
+        } else {
+            panic(errors.New(request.Method + " not support"))
+        }
     }
 
     // response to the robot request 
