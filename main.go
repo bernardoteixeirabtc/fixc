@@ -105,6 +105,10 @@ func tapiCall(method string, params map[string]string) (data interface{}){
         data = placeCustomTrade(params["market"], params["side"], params["clientId"], params["size"], params["price"], params["postOnly"])
         return
     }
+    else if method == "/cancelOrderByLabel"{
+        fmt.Println("ORDER TAPI CANCEL:", params)
+        data = cancelOrderByLabel(params["label"])
+    }
     return
     
 }
@@ -196,6 +200,21 @@ func placeStandardTrade(s string, request RpcRequest) (data interface{}) {
     } else {
         panic(fmt.Sprintf("%s", fm.String()))
     }
+}
+
+func cancelOrderByLabel(label string) (data interface{}){
+    fmt.Println("CANCEL ORDER:", label)
+    var err error
+
+    msg := new(fixc.MsgBase)
+    msg.AddField(35, "F")
+    msg.AddField(41, label)
+    _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // cancel order 
+    _, err = _pFixClient.Expect("35=8", "150=6")
+    if err != nil {
+        panic(fmt.Sprintf("%v", err))
+    }
+    return true
 }
 
 func cancelOrder(orderId string) (data interface{}){
