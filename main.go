@@ -95,10 +95,14 @@ func onError(err error) {
     return 
 }
 
-func tapiCall(method string, params interface{}) (ret interface{}){
+func tapiCall(method string, params map[string]string) (ret interface{}){
+    if params == nil {
+        params = map[string]string{}
+    }
+
     if method == "/sendOrder"{
         fmt.Println("HERE:", params)
-        var ret = placeCustomTrade(params.market, params.side, params.clientId, params.size, params.price, params.postOnly)
+        var ret = placeCustomTrade(params["market", params["side"], params["clientId"], params["size"], params["price"], params["postOnly"])
         return
     }
     return
