@@ -95,13 +95,13 @@ func onError(err error) {
     return 
 }
 
-func SendTrade(symbol symbol, request request){
+func SendTrade(s symbol, r request){
     /* e.g. FTX application interface: new order 
         8=FIX.4.2|9=150|35=D|49=XXXX|56=FTX|34=2|21=1|52=20201111-03:17:14.349|
         11=fmzOrder1112|55=BTC-PERP|40=2|38=0.01|44=8000|54=1|59=1|10=078|
     */ 
     var fm *fixc.FixMessage
-    if symbol == "" {
+    if s == "" {
         panic("symbol is empty!")
     }
     msgType := "D"   
@@ -116,7 +116,7 @@ func SendTrade(symbol symbol, request request){
     msg.AddField(35, msgType)
     msg.AddField(21, "1")
     msg.AddField(11, fmt.Sprintf("fmz%d", ts))
-    msg.AddField(55, strings.ToUpper(symbol))
+    msg.AddField(55, strings.ToUpper(s))
     msg.AddField(40, "2")
     msg.AddField(38, toString(request.Params["amount"]))
     msg.AddField(44, toString(request.Params["price"]))
