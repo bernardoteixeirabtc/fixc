@@ -108,7 +108,7 @@ func tapiCall(method string, params map[string]string) (ret interface{}){
     return
 }
 
-func placeCustomTrade(contract string, tradeSide string, label string, amount float64, price float64, postOnly bool) (data interface{}){
+func placeCustomTrade(contract string, tradeSide string, label string, amount string, price string, postOnly string) (data interface{}){
     var err error
     /* e.g. FTX application interface: new order 
         8=FIX.4.2|9=150|35=D|49=XXXX|56=FTX|34=2|21=1|52=20201111-03:17:14.349|
@@ -136,7 +136,7 @@ func placeCustomTrade(contract string, tradeSide string, label string, amount fl
     msg.AddField(54, tradeSide) // Side
     msg.AddField(59, "1") // GTC  
 
-    if postOnly{
+    if postOnly == "true" {
         msg.AddField(18, "6") // Post Only
     }
 
