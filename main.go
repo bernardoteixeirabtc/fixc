@@ -96,6 +96,7 @@ func onError(err error) {
 }
 
 func tapiCall(method string, params map[string]string) (ret interface{}){
+    var err error
     if params == nil {
         params = map[string]string{}
     }
@@ -105,6 +106,7 @@ func tapiCall(method string, params map[string]string) (ret interface{}){
         var ret = placeCustomTrade(params["market"], params["side"], params["clientId"], params["size"], params["price"], params["postOnly"])
         return
     }
+    var ret = {}
     return
 }
 
