@@ -95,6 +95,14 @@ func onError(err error) {
     return 
 }
 
+func TapiCall(method string, params map[string]string) (js *Json){
+    if method == "/sendOrder"{
+        fmt.Println("HERE:", params)
+        return
+    }
+
+}
+
 func SendTrade(s string, request RpcRequest) (data interface{}) {
     var err error
     /* e.g. FTX application interface: new order 
@@ -203,7 +211,7 @@ func OnPost(w http.ResponseWriter, r *http.Request) {
 
     default:
         if strings.HasPrefix(request.Method, "__api_") {
-            //data, err = e.tapiCall(request.Method[6:], request.Params)
+            data = tapiCall(request.Method[6:], request.Params)
         } else {
             //panic(errors.New(request.Method + " not support"))
         }
