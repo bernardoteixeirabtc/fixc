@@ -101,7 +101,7 @@ func tapiCall(method string, params map[string]string) (data interface{}){
     }
 
     if method == "/sendOrder" {
-        fmt.Println("HERE:", params)
+        fmt.Println("ORDER TAPI CALL:", params)
         data = placeCustomTrade(params["market"], params["side"], params["clientId"], params["size"], params["price"], params["postOnly"])
         return
     }
@@ -198,6 +198,26 @@ func placeStandardTrade(s string, request RpcRequest) (data interface{}) {
     }
 }
 
+func cancelOrder(orderId string) (data interface{}){
+    var err error
+
+    msg := new(fixc.MsgBase)
+    msg.AddField(35, "F")
+    msg.AddField(37, orderId)
+    _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // cancel order 
+    _, err = _pFixClient.Expect("35=8", "150=6")
+    if err != nil {
+        panic(fmt.Sprintf("%v", err))
+    }
+    // analysis
+    if orderId, ok := fm.Find("37"); ok {
+        data = map[string]string{"id": orderId}
+        return
+    } else {
+        panic(fmt.Sprintf("%s", fm.String()))
+    }
+}
+
 func OnPost(w http.ResponseWriter, r *http.Request) {
     var ret interface{}
     defer func() {
@@ -249,14 +269,7 @@ func OnPost(w http.ResponseWriter, r *http.Request) {
         data = placeStandardTrade(symbol, request)
     case "cancel":        
         orderId := request.Params["id"]
-        msg := new(fixc.MsgBase)
-        msg.AddField(35, "F")
-        msg.AddField(37, orderId)
-        _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // cancel order 
-        _, err = _pFixClient.Expect("35=8", "150=6")
-        if err != nil {
-            panic(fmt.Sprintf("%v", err))
-        }
+        data = cancelOrder(symbol)
         data = true
     case "order":
         //orderId := request.Params["id"]
