@@ -36,6 +36,39 @@ type RpcRequest struct {
     Params    map[string]string `json:"params"`
 }
 
+type ExecutionReport struct {
+    ClOrdID string // Client-selected order ID. 11
+    OrderID string // Server-assigned order ID. 37
+    Symbol string // Symbol name. 55
+    Side string // "1": buy; "2": sell. 54
+    OrderQty string // Original order quantity. 38
+    Price string // Original order price. 44
+    ExecType string // Reason for this message (see below). 150
+    /*0	New order
+        1	New fill for order
+        3	Order done (fully filled)
+        4	Order cancelled
+        5	Order resized (possible for reduce-only orders)
+        A	Response to a successful NewOrderSingle (D) request
+        8	Response to a rejected NewOrderSingle (D) request
+        6	Response to a successful OrderCancelRequest (F) request
+        I	Response to a OrderStatusRequest (H) request
+    */
+    OrdStatus string // Order status (see below). 39
+        /*A	Pending order
+        0	New order
+        1	Partially filled order
+        3	Fully filled order
+        4	Cancelled order
+        5	Resized order
+        6	Pending cancel
+    */
+    CumQty string // Quantity of order that has already been filled. 14
+    LeavesQty string // Quantity of order that is still open. 151
+    TransactTime string // Time of the order update. Only present on order updates. 60
+    AvgPx string // Average fill price for all fills in order. Only present if this message was the result of a fill. 6
+}
+
 func HMACEncrypt(pfn func() hash.Hash, data, key string) string {
     h := hmac.New(pfn, []byte(key))
     if _, err := h.Write([]byte(data)); err == nil {
@@ -89,11 +122,14 @@ func onConnect() {
 func onMessage(fm *fixc.FixMessage) {
     fmt.Println("Receive:", fm.String())
 
-    messageType, ok := fm.Find("35");
+    messageFlag, ok := fm.Find("35");
+    messageType, ok := fm.Find("150");
 
+    fmt.Println("messageFlag:", messageFlag, ok)
     fmt.Println("messageType:", messageType, ok)
 
-    if messageType == "8" {
+    if messageFlag == "8" && (messageType == "1" || messageType == "3" || messageType == "4" ){
+        fmt.Println("ORDER DONE:", fm.String())
         
     }
 }
