@@ -198,6 +198,7 @@ func getExecutionFromCache(orderId string) (data interface{}){
             return 
         }
     }
+    return
 }
 
 func placeCustomTrade(contract string, tradeSide string, label string, amount string, price string, postOnly string) (data interface{}){
