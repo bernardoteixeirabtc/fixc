@@ -70,7 +70,7 @@ type ExecutionReport struct {
     AvgPx string // Average fill price for all fills in order. Only present if this message was the result of a fill. 6
 }
 
-var executionReports map[ExecutionReport] 
+//var executionReports map[ExecutionReport] 
 
 func HMACEncrypt(pfn func() hash.Hash, data, key string) string {
     h := hmac.New(pfn, []byte(key))
