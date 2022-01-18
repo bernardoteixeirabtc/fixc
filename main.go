@@ -26,7 +26,8 @@ import (
 const SOH = string(1)
 var _pFixClient *fixc.FIXClient
 var _accessKey string 
-var _secretKey string 
+var _secretKey string
+
 
 type RpcRequest struct {
     AccessKey string            `json:"access_key"`
@@ -68,6 +69,8 @@ type ExecutionReport struct {
     TransactTime string // Time of the order update. Only present on order updates. 60
     AvgPx string // Average fill price for all fills in order. Only present if this message was the result of a fill. 6
 }
+
+var executionReports map[ExecutionReport] 
 
 func HMACEncrypt(pfn func() hash.Hash, data, key string) string {
     h := hmac.New(pfn, []byte(key))
@@ -151,7 +154,7 @@ func onMessage(fm *fixc.FixMessage) {
             CumQty: mCumQty, 
             LeavesQty: mLeavesQty, 
             TransactTime: mTransactTime, 
-            AvgPx: AvgPx
+            AvgPx: mAvgPx,
         }
         
     }
