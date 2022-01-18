@@ -93,7 +93,7 @@ func onMessage(fm *fixc.FixMessage) {
 
     fmt.Println("messageType:", messageType, ok)
 
-    if messageType == 8 {
+    if messageType == "8" {
         
     }
 }
