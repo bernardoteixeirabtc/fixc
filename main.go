@@ -192,7 +192,7 @@ func tapiCall(method string, params map[string]string) (data interface{}){
 func getExecutionFromCache(orderId string) (data interface{}){
     for k, v := range executionReports {
         fmt.Println(k, v)
-        if (v["mOrderID"] == orderId){
+        if (v.mOrderID == orderId){
             fmt.Println("FOUND:", v)
             data = v
             return 
