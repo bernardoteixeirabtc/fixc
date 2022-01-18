@@ -157,9 +157,9 @@ func onMessage(fm *fixc.FixMessage) {
             AvgPx: mAvgPx,
         }
 
-        executionReports = append(executionReports, report)
+        //executionReports = append(executionReports, report)
 
-        fmt.Println("executionReports", executionReports, ok)
+        fmt.Println("report", report, ok)
         
     }
 }
