@@ -190,6 +190,7 @@ func tapiCall(method string, params map[string]string) (data interface{}){
 }
 
 func getExecutionFromCache(orderId string) (data interface{}){
+    fmt.Println("SEARCHING ORDER:", orderId)
     for k, v := range executionReports {
         fmt.Println(k, v)
         if (v.OrderID == orderId){
