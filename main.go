@@ -138,7 +138,7 @@ func onMessage(fm *fixc.FixMessage) {
     mCumQty, ok := fm.Find("14");
     mLeavesQty, ok := fm.Find("151");
     mTransactTime, ok := fm.Find("60");
-    AvgPx, ok := fm.Find("6");
+    mAvgPx, ok := fm.Find("6");
 
     if messageFlag == "8" && (messageType == "1" || messageType == "3" || messageType == "4" ){
         fmt.Println("ORDER DONE:", fm.String())
