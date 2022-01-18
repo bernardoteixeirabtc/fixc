@@ -141,7 +141,7 @@ func onMessage(fm *fixc.FixMessage) {
     mAvgPx, ok := fm.Find("6");
 
     if messageFlag == "8" && (messageType == "1" || messageType == "3" || messageType == "4" ){
-        fmt.Println("ORDER DONE:", fm.String())
+        
         report := ExecutionReport{
             ClOrdID: mClOrdID,
             OrderID: mOrderID, 
@@ -156,6 +156,7 @@ func onMessage(fm *fixc.FixMessage) {
             TransactTime: mTransactTime, 
             AvgPx: mAvgPx,
         }
+        fmt.Println("ORDER DONE:", report, ok)
         
     }
 }
