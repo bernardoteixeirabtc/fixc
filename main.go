@@ -123,7 +123,7 @@ func onConnect() {
 }
 
 func onMessage(fm *fixc.FixMessage) {
-    //fmt.Println("Receive:", fm.String())
+    fmt.Println("Receive:", fm.String())
 
     messageFlag, ok := fm.Find("35");
     messageType, ok := fm.Find("150");
@@ -404,3 +404,6 @@ func main() {
     http.HandleFunc(basePath, OnPost)
     http.ListenAndServe(*addr, nil)
 }
+
+
+
