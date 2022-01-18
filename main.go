@@ -307,14 +307,14 @@ func cancelOrderByLabel(label string) (data interface{}){
 }
 
 func cancelOrder(orderId string) (data interface{}){
-    //fmt.Println("CANCEL ORDER:", orderId)
+    fmt.Println("CANCEL ORDER:", orderId)
     var err error
 
     msg := new(fixc.MsgBase)
     msg.AddField(35, "F")
     msg.AddField(37, orderId)
     _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // cancel order 
-    _, err = _pFixClient.Expect("35=8", "150=6")
+    _, err = _pFixClient.Expect("37=" + orderId, "35=8", "150=6")
     if err != nil {
         panic(fmt.Sprintf("%v", err))
     }
