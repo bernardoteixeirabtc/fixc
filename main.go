@@ -159,7 +159,7 @@ func onMessage(fm *fixc.FixMessage) {
 
         executionReports = append(executionReports, report)
 
-        fmt.Println("executionReports", executionReports)
+        fmt.Println("executionReports", executionReports, ok)
         
     }
 }
