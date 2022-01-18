@@ -88,6 +88,15 @@ func onConnect() {
 
 func onMessage(fm *fixc.FixMessage) {
     fmt.Println("Receive:", fm.String())
+
+    var messageType = fm.Find("35")
+
+    fmt.Println("messageType:", messageType)
+
+    if messageType == 8 {
+        
+        
+    }
 }
 
 func onError(err error) {
@@ -108,6 +117,9 @@ func tapiCall(method string, params map[string]string) (data interface{}){
     if method == "/cancelOrderByLabel"{
         fmt.Println("ORDER TAPI CANCEL:", params)
         data = cancelOrderByLabel(params["label"])
+    }
+    if method == "/getExecutionFromCache"{
+
     }
     return
     
