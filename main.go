@@ -125,11 +125,34 @@ func onMessage(fm *fixc.FixMessage) {
     messageFlag, ok := fm.Find("35");
     messageType, ok := fm.Find("150");
 
-    fmt.Println("messageFlag:", messageFlag, ok)
-    fmt.Println("messageType:", messageType, ok)
+    mClOrdID, ok := fm.Find("11");
+    mOrderID, ok := fm.Find("37");
+    mSymbol, ok := fm.Find("55");
+    mSide, ok := fm.Find("54");
+    mOrderQty, ok := fm.Find("38");
+    mPrice, ok := fm.Find("44");
+    mOrdStatus, ok := fm.Find("39");
+    mCumQty, ok := fm.Find("14");
+    mLeavesQty, ok := fm.Find("151");
+    mTransactTime, ok := fm.Find("60");
+    AvgPx, ok := fm.Find("6");
 
     if messageFlag == "8" && (messageType == "1" || messageType == "3" || messageType == "4" ){
         fmt.Println("ORDER DONE:", fm.String())
+        report := ExecutionReport{
+            ClOrdID: mClOrdID,
+            OrderID: mOrderID, 
+            Symbol: mSymbol,
+            Side: mSide,
+            OrderQty: mOrderQty, 
+            Price: mPrice, 
+            ExecType: messageType, 
+            OrdStatus: mOrdStatus,
+            CumQty: mCumQty, 
+            LeavesQty: mLeavesQty, 
+            TransactTime: mTransactTime, 
+            AvgPx: AvgPx
+        }
         
     }
 }
