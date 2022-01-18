@@ -235,7 +235,7 @@ func placeCustomTrade(contract string, tradeSide string, label string, amount st
     }
 
     _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // new order
-    fm, err = _pFixClient.Expect("35=8", "150=A", "11="+ label)                        // waiting msg
+    fm, err = _pFixClient.Expect("11=" + label)         // waiting msg "35=8", "150=A", 
     if err != nil {
         panic(fmt.Sprintf("%v", err))
     }
@@ -404,6 +404,3 @@ func main() {
     http.HandleFunc(basePath, OnPost)
     http.ListenAndServe(*addr, nil)
 }
-
-
-
