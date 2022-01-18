@@ -70,7 +70,7 @@ type ExecutionReport struct {
     AvgPx string // Average fill price for all fills in order. Only present if this message was the result of a fill. 6
 }
 
-//var executionReports map[ExecutionReport] 
+var executionReports = []ExecutionReport
 
 func HMACEncrypt(pfn func() hash.Hash, data, key string) string {
     h := hmac.New(pfn, []byte(key))
@@ -123,7 +123,7 @@ func onConnect() {
 }
 
 func onMessage(fm *fixc.FixMessage) {
-    fmt.Println("Receive:", fm.String())
+    //fmt.Println("Receive:", fm.String())
 
     messageFlag, ok := fm.Find("35");
     messageType, ok := fm.Find("150");
@@ -156,7 +156,10 @@ func onMessage(fm *fixc.FixMessage) {
             TransactTime: mTransactTime, 
             AvgPx: mAvgPx,
         }
-        fmt.Println("ORDER DONE:", report, ok)
+
+        executionReports = append(executionReports, report)
+
+        fmt.Println("executionReports", executionReports)
         
     }
 }
@@ -172,12 +175,12 @@ func tapiCall(method string, params map[string]string) (data interface{}){
     }
 
     if method == "/sendOrder" {
-        fmt.Println("ORDER TAPI CALL:", params)
+        //fmt.Println("ORDER TAPI CALL:", params)
         data = placeCustomTrade(params["market"], params["side"], params["clientId"], params["size"], params["price"], params["postOnly"])
         return
     }
     if method == "/cancelOrderByLabel"{
-        fmt.Println("ORDER TAPI CANCEL:", params)
+        //fmt.Println("ORDER TAPI CANCEL:", params)
         data = cancelOrderByLabel(params["label"])
     }
     if method == "/getExecutionFromCache"{
@@ -277,7 +280,7 @@ func placeStandardTrade(s string, request RpcRequest) (data interface{}) {
 }
 
 func cancelOrderByLabel(label string) (data interface{}){
-    fmt.Println("CANCEL ORDER:", label)
+    //fmt.Println("CANCEL ORDER:", label)
     var err error
 
     msg := new(fixc.MsgBase)
@@ -292,7 +295,7 @@ func cancelOrderByLabel(label string) (data interface{}){
 }
 
 func cancelOrder(orderId string) (data interface{}){
-    fmt.Println("CANCEL ORDER:", orderId)
+    //fmt.Println("CANCEL ORDER:", orderId)
     var err error
 
     msg := new(fixc.MsgBase)
