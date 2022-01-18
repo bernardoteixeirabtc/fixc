@@ -89,9 +89,9 @@ func onConnect() {
 func onMessage(fm *fixc.FixMessage) {
     fmt.Println("Receive:", fm.String())
 
-    var messageType = fm.Find("35")
+    messageType, ok := fm.Find("35"); ok {
 
-    fmt.Println("messageType:", messageType)
+    fmt.Println("messageType:", messageType, ok)
 
     if messageType == 8 {
         
