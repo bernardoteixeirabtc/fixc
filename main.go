@@ -184,10 +184,20 @@ func tapiCall(method string, params map[string]string) (data interface{}){
         data = cancelOrderByLabel(params["label"])
     }
     if method == "/getExecutionFromCache"{
-
+        data = getExecutionFromCache(params["orderId"])
     }
     return
-    
+}
+
+func getExecutionFromCache(orderId string) (data interface{}){
+    for k, v := range executionReports {
+        fmt.Println(k, v)
+        if (v["mOrderID"] == orderId){
+            fmt.Println("FOUND:" v)
+            data = v
+            return 
+        }
+    }
 }
 
 func placeCustomTrade(contract string, tradeSide string, label string, amount string, price string, postOnly string) (data interface{}){
