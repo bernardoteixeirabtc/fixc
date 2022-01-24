@@ -118,7 +118,7 @@ func onConnect() {
 
     signature := HMACEncrypt(sha256.New, data, _secretKey)   
     // send logon msg
-    if err := _pFixClient.Send(fmt.Sprintf("1=cc8=|35=A|49=|56=|34=|52=%s|98=0|108=30|96=%s|", strTime, signature)); err != nil {
+    if err := _pFixClient.Send(fmt.Sprintf("8=|1=cc|35=A|49=|56=|34=|52=%s|98=0|108=30|96=%s|", strTime, signature)); err != nil {
         fmt.Println("err:", err)
     }
 }
@@ -235,7 +235,7 @@ func placeCustomTrade(contract string, tradeSide string, label string, amount st
         msg.AddField(18, "6") // Post Only
     }
 
-    _pFixClient.Send(fmt.Sprintf("8=|49=|56=|34=|52=|%s", msg.Pack()))   // new order
+    _pFixClient.Send(fmt.Sprintf("|8=|49=|56=|34=|52=|%s", msg.Pack()))   // new order
     fm, err = _pFixClient.Expect("11=" + label)         // waiting msg "35=8", "150=A", 
     if err != nil {
         panic(fmt.Sprintf("%v", err))
