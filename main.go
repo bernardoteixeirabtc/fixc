@@ -241,16 +241,19 @@ func placeCustomTrade(contract string, tradeSide string, label string, amount st
         panic(fmt.Sprintf("%v", err))
     }
 
-    
+    fmt.Println("Order response:", fm.String())
 
     // analysis
     if orderId, ok := fm.Find("37"); ok {
+        fmt.Println("Order Successfully Created:", orderId, fm.String())
         data = map[string]string{"id": orderId}
         return
     } else if messageError, ok := fm.Find("58"); ok {
+        fmt.Println("Order Rejected:", messageError, fm.String())
         data = map[string]string{"error": messageError}
         return
     } else {
+        fmt.Println("Unhandled Rejection:", fm.String())
         panic(fmt.Sprintf("%s", fm.String()))
     }
 
