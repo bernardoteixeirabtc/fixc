@@ -124,7 +124,7 @@ func onConnect() {
 }
 
 func onMessage(fm *fixc.FixMessage) {
-    // fmt.Println("Receive:", fm.String())
+    fmt.Println("Receive:", fm.String())
 
     messageFlag, ok := fm.Find("35");
     messageType, ok := fm.Find("150");
@@ -160,7 +160,7 @@ func onMessage(fm *fixc.FixMessage) {
 
         //executionReports = append(executionReports, report)
 
-        //fmt.Println("report", report, ok)
+        fmt.Println("report", report, ok)
         
     }
 }
