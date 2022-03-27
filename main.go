@@ -118,7 +118,7 @@ func onConnect() {
 
     signature := HMACEncrypt(sha256.New, data, _secretKey)   
     // send logon msg
-    if err := _pFixClient.Send(fmt.Sprintf("8=|1=cc|35=A|49=|56=|34=|52=%s|98=0|108=30|96=%s|", strTime, signature)); err != nil {
+    if err := _pFixClient.Send(fmt.Sprintf("8=|35=A|49=|56=|34=|52=%s|98=0|108=30|96=%s|", strTime, signature)); err != nil {
         fmt.Println("err:", err)
     }
 }
