@@ -124,7 +124,7 @@ func onConnect() {
 }
 
 func onMessage(fm *fixc.FixMessage) {
-    fmt.Println("Receive:", fm.String())
+    // fmt.Println("Receive:", fm.String())
 
     messageFlag, ok := fm.Find("35");
     messageType, ok := fm.Find("150");
@@ -160,7 +160,7 @@ func onMessage(fm *fixc.FixMessage) {
 
         //executionReports = append(executionReports, report)
 
-        fmt.Println("report", report, ok)
+        //fmt.Println("report", report, ok)
         
     }
 }
@@ -191,7 +191,7 @@ func tapiCall(method string, params map[string]string) (data interface{}){
 }
 
 func getExecutionFromCache(orderId string) (data interface{}){
-    fmt.Println("SEARCHING ORDER:", orderId)
+    //fmt.Println("SEARCHING ORDER:", orderId)
     for k, v := range executionReports {
         fmt.Println(k, v)
         if (v.OrderID == orderId){
@@ -241,19 +241,19 @@ func placeCustomTrade(contract string, tradeSide string, label string, amount st
         panic(fmt.Sprintf("%v", err))
     }
 
-    fmt.Println("Order response:", fm.String())
+    //fmt.Println("Order response:", fm.String())
 
     // analysis
     if orderId, ok := fm.Find("37"); ok {
-        fmt.Println("Order Successfully Created:", orderId, fm.String())
+        //fmt.Println("Order Successfully Created:", orderId, fm.String())
         data = map[string]string{"id": orderId}
         return
     } else if messageError, ok := fm.Find("58"); ok {
-        fmt.Println("Order Rejected:", messageError, fm.String())
+        //fmt.Println("Order Rejected:", messageError, fm.String())
         data = map[string]string{"error": messageError}
         return
     } else {
-        fmt.Println("Unhandled Rejection:", fm.String())
+        //fmt.Println("Unhandled Rejection:", fm.String())
         panic(fmt.Sprintf("%s", fm.String()))
     }
 
