@@ -241,7 +241,7 @@ func placeCustomTrade(contract string, tradeSide string, label string, amount st
         panic(fmt.Sprintf("%v", err))
     }
 
-    messageError, ok := fm.Find("57");
+    messageError, ok := fm.Find("57"); ok;
 
     // analysis
     if orderId, ok := fm.Find("37"); ok {
