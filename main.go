@@ -245,8 +245,7 @@ func placeCustomTrade(contract string, tradeSide string, label string, amount st
         data = map[string]string{"id": orderId}
         return
     } else {
-        er, ok := fm.Find("37");
-        data = map[string]string{"error": er}
+        data = map[string]string{"error": orderId}
         return
 
     }
