@@ -20,6 +20,7 @@ import (
     "net/http"
     "strconv"
     "strings"
+    "fixc"
 )
 
 const SOH = string(1)
